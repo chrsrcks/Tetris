@@ -54,7 +54,7 @@ function draw() {
   if (player_2)  player_2.draw();
 
   if (mouseIsPressed) {
-    drag_time++;
+    drag_start = millis();
     if (pre_mouse_pos.x == 0 && pre_mouse_pos.y == 0) {
       pre_mouse_pos.x = mouseX;
       pre_mouse_pos.y = mouseY;

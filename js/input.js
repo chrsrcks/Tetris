@@ -81,14 +81,12 @@ function keyPressed() {
 }
 
 function mouseReleased() {
-  console.log(drag_time);
-
 
   if (!player_1) {
 
     player_1 = new Game(createVector((width*0.5) - (2*block_size), (height/2) - (12*block_size)), 3);
 
-  } else if (drag_time <= 10 && !player_1.current_block.collide(player_1.matrix, 0, 0)) {
+  } else if (drag_start <= millis()+100 && !player_1.current_block.collide(player_1.matrix, 0, 0)) {
     player_1.current_block.rotate(player_1.matrix);
     sound.turn.play();
 
@@ -108,7 +106,6 @@ function mouseReleased() {
 
   }
 
-  drag_time = 0;
   pre_mouse_pos.x = 0;
   pre_mouse_pos.y = 0;
 
