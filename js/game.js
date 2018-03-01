@@ -9,11 +9,9 @@ var Game = function(_pos, _player) {
   this.current_block = new Block(floor(random(7)));
   this.next_block_type = floor(random(7));
   this.level_speed = 1000;
-  this.start_time = millis();
-  this.timer = this.start_time + this.level_speed;
+  this.timer = millis() + this.level_speed;
   this.score = 0;
   this.level = 0;
-
   this.score_lines = 0;
   this.temp_lines = []; // lines clear effect
   this.wait_lines = 0;
@@ -26,10 +24,10 @@ var Game = function(_pos, _player) {
 
     // draw emty & sitting blocks
     this.matrix_draw();
-    // draw preview & points & input
+    // draw preview & points & input control
     this.preview_draw();
     this.score_draw();
-    if (this.player != 3)  this.input_draw();
+    this.control_draw();
     // draw clear effect
     this.drawClearLines();
 
@@ -42,44 +40,47 @@ var Game = function(_pos, _player) {
       if (keyIsDown(this.input.fast_down) && !this.current_block.collide(this.matrix, 0, 1) && this.current_block.pos.y >= 2*block_size)
         this.current_block.move(0 ,1); // move y +1
 
-      //this.timer ++;
-      if (this.timer <= millis()) { // timer
-        this.timer = millis() + this.level_speed;
-        this.temp_lines = [];
+      if (!pause) {
 
-        if (this.current_block.collide(this.matrix, 0, 1)) { // collide bottom
+        //this.timer ++;
+        if (this.timer <= millis()) { // timer
+          this.timer = millis() + this.level_speed;
+          this.temp_lines = [];
 
-          this.current_block.pushInMatrix(this.matrix);
+          if (this.current_block.collide(this.matrix, 0, 1)) { // collide bottom
 
-          this.temp_lines = this.check_lines(); // check full lines & return array with yy
-          if (this.temp_lines.length > 0) {
-            this.clear_lines(); // clear all full lines
-            this.update_score();
-            sound.line.play();
-             // 2 player mode - save lines to other player
-            if (this.player == 1)  player_2.wait_lines = this.temp_lines.length;
-            else if (this.player == 2)  player_1.wait_lines = this.temp_lines.length;
+            this.current_block.pushInMatrix(this.matrix);
+
+            this.temp_lines = this.check_lines(); // check full lines & return array with yy
+            if (this.temp_lines.length > 0) {
+              this.clear_lines(); // clear all full lines
+              this.update_score();
+              sound.line.play();
+               // 2 player mode - save lines to other player
+              if (this.player == 1)  player_2.wait_lines = this.temp_lines.length;
+              else if (this.player == 2)  player_1.wait_lines = this.temp_lines.length;
+            }
+
+            // 2 player mode - push lines in matrix
+            this.pushLines(this.wait_lines);
+            this.wait_lines = 0;
+
+            // check GAME OVER
+            if (this.checkGameOver()) { // GAME OVER
+              this.current_block = -1; // stop game loop
+              sound.gameover.play();
+              // return;
+            } else { // NO GAME OVER = next block
+              this.current_block = new Block(this.next_block_type);
+              this.next_block_type = floor(random(7));
+            }
+
+          } else { // NOT collide bottom
+            // move down
+            this.current_block.move(0 ,1);  // move y +1
           }
 
-          // 2 player mode - push lines in matrix
-          this.pushLines(this.wait_lines);
-          this.wait_lines = 0;
-
-          // check GAME OVER
-          if (this.checkGameOver()) { // GAME OVER
-            this.current_block = -1; // stop game loop
-            sound.gameover.play();
-            // return;
-          } else { // NO GAME OVER = next block
-            this.current_block = new Block(this.next_block_type);
-            this.next_block_type = floor(random(7));
-          }
-
-        } else { // NOT collide bottom
-          // move down
-          this.current_block.move(0 ,1);  // move y +1
         }
-
       }
 
     } else { // GAME OVER
@@ -156,7 +157,7 @@ var Game = function(_pos, _player) {
 
   }
 
-  this.input_draw = function() {
+  this.control_draw = function() {
 
     push();
     stroke(50);

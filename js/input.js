@@ -26,7 +26,7 @@ function setInput() {
       fast_down: 13 // enter
     },
     { // mobile player_3
-      left: left_swipe,
+      left: LEFT_SWIPE,
       right: RIGHT_SWIPE,
       down: DOWN_SWIPE,
       fast_down: DOWN_SWIPE
@@ -77,6 +77,19 @@ function keyPressed() {
       player_2.current_block.rotate(player_2.matrix);
       sound.turn.play();
     }
+  }
+
+}
+
+function mousePressed() {
+  drag_start = millis();
+  pre_mouse_pos.x = mouseX;
+  pre_mouse_pos.y = mouseY;
+
+  if (mouseX <= 100 && mouseY <= 100)  pause = !pause;
+  else if (mouseX >= width-100 && mouseY <= 100) {
+    let fs = fullscreen();
+    fullscreen(!fs);
   }
 
 }
@@ -136,10 +149,17 @@ var key_name = [
     down: 'DOWN',
     rotate: 'UP',
     fast_down: 'ENTER'
+  },
+  { // mobile player_3
+    left: 'LEFT SWIPE',
+    right: 'RIGHT SWIPE',
+    down: 'DOWN SWIPE',
+    rotate: 'TOUCH',
+    fast_down: 'DOWN SWIPE'
   }
 ];
 
-function left_swipe() {
+function LEFT_SWIPE() {
 
   if (mouseX < pre_mouse_pos.x)
     return true;
