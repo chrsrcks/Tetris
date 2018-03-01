@@ -6,14 +6,17 @@ var Game = function(_pos, _player) {
   this.input = input[_player];
   this.matrix = createArray2D(10, 22);
   this.matrix_pos = _pos;
-  this.current_block = new Block(round(random(6)));
-  this.next_block_type = round(random(6));
-  this.timer = 0;
+  this.current_block = new Block(floor(random(7)));
+  this.next_block_type = floor(random(7));
+  this.level_speed = 1000;
+  this.start_time = millis();
+  this.timer = this.start_time + this.level_speed;
   this.score = 0;
   this.level = 0;
-  this.level_speed = 60;
+
   this.score_lines = 0;
   this.temp_lines = []; // lines clear effect
+  this.wait_lines = 0;
 
 
   this.draw = function() {
@@ -39,9 +42,9 @@ var Game = function(_pos, _player) {
       if (keyIsDown(this.input.fast_down) && !this.current_block.collide(this.matrix, 0, 1) && this.current_block.pos.y >= 2*block_size)
         this.current_block.move(0 ,1); // move y +1
 
-      this.timer ++;
-      if (this.timer >= this.level_speed) { // timer
-        this.timer = 0;
+      //this.timer ++;
+      if (this.timer <= millis()) { // timer
+        this.timer = millis() + this.level_speed;
         this.temp_lines = [];
 
         if (this.current_block.collide(this.matrix, 0, 1)) { // collide bottom
@@ -53,10 +56,14 @@ var Game = function(_pos, _player) {
             this.clear_lines(); // clear all full lines
             this.update_score();
             sound.line.play();
-             // 2 player mode - push lines
-            if (this.player == 1)  player_2.pushLines(this.temp_lines.length);
-            else if (this.player == 2)  player_1.pushLines(this.temp_lines.length);
+             // 2 player mode - save lines to other player
+            if (this.player == 1)  player_2.wait_lines = this.temp_lines.length;
+            else if (this.player == 2)  player_1.wait_lines = this.temp_lines.length;
           }
+
+          // 2 player mode - push lines in matrix
+          this.pushLines(this.wait_lines);
+          this.wait_lines = 0;
 
           // check GAME OVER
           if (this.checkGameOver()) { // GAME OVER
@@ -65,7 +72,7 @@ var Game = function(_pos, _player) {
             // return;
           } else { // NO GAME OVER = next block
             this.current_block = new Block(this.next_block_type);
-            this.next_block_type = round(random(6));
+            this.next_block_type = floor(random(7));
           }
 
         } else { // NOT collide bottom
@@ -263,7 +270,7 @@ var Game = function(_pos, _player) {
   this.pushLines = function(_lines) {
 
     for (let yy = 2; yy < this.matrix[0].length; yy++) {
-      let random_block = round(random(this.matrix.length-1));
+      let random_block = floor(random(this.matrix.length));
       for (let xx = this.matrix.length-1; xx >= 0; xx--) {
 
         if (yy >= _lines)
@@ -271,7 +278,7 @@ var Game = function(_pos, _player) {
 
         if (yy >= this.matrix[0].length - _lines) {
 
-          if (xx != random_block)  this.matrix[xx][yy] = round(random(6));
+          if (xx != random_block)  this.matrix[xx][yy] = floor(random(7));
           else  this.matrix[xx][yy] = undefined;
         }
 

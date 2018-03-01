@@ -1,4 +1,4 @@
-
+var pre_mouse_pos;
 
 function setInput() {
 
@@ -25,7 +25,7 @@ function setInput() {
       fast_down: 13 // enter
     },
     { // mobile player_3
-      left: LEFT_SWIPE,
+      left: left_swipe,
       right: RIGHT_SWIPE,
       down: DOWN_SWIPE,
       fast_down: DOWN_SWIPE
@@ -81,6 +81,8 @@ function keyPressed() {
 }
 
 function mouseReleased() {
+  console.log(drag_time);
+
 
   if (!player_1) {
 
@@ -88,24 +90,27 @@ function mouseReleased() {
 
   } else if (drag_time <= 10 && !player_1.current_block.collide(player_1.matrix, 0, 0)) {
     player_1.current_block.rotate(player_1.matrix);
-    drag_time = 0;
     sound.turn.play();
+
   } else if (player_1 && player_1.current_block != -1 && player_1.current_block.pos.y >= 2*block_size) {
     if (player_1.input.left() && !player_1.current_block.collide(player_1.matrix, -1, 0)) { // left
       player_1.current_block.move(-1, 0);
-      drag_time = 0;
       sound.move.play();
+
     } else if (player_1.input.right() && !player_1.current_block.collide(player_1.matrix, 1, 0)) { // right
       player_1.current_block.move(1, 0);
-      drag_time = 0;
       sound.move.play();
+
     } else if (player_1.input.down() && !player_1.current_block.collide(player_1.matrix, 0, 1)) { // down
       player_1.current_block.move(0, 1);
-      drag_time = 0;
       sound.move.play();
     }
 
   }
+
+  drag_time = 0;
+  pre_mouse_pos.x = 0;
+  pre_mouse_pos.y = 0;
 
 }
 
@@ -135,9 +140,9 @@ var key_name = [
   }
 ];
 
-function LEFT_SWIPE() {
+function left_swipe() {
 
-  if (mouseX < pmouseX)
+  if (mouseX < pre_mouse_pos.x)
     return true;
   else
     return false;
@@ -146,7 +151,7 @@ function LEFT_SWIPE() {
 
 function RIGHT_SWIPE() {
 
-  if (mouseX > pmouseX)
+  if (mouseX > pre_mouse_pos.x)
     return true;
   else
     return false;
@@ -155,7 +160,7 @@ function RIGHT_SWIPE() {
 
 function DOWN_SWIPE() {
 
-  if (mouseY > pmouseY)
+  if (mouseY > pre_mouse_pos.y)
     return true;
   else
     return false;

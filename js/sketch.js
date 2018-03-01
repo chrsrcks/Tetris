@@ -43,6 +43,7 @@ function setup(){
   textFont(font);
 
   input = setInput();
+  pre_mouse_pos = createVector(0,0);
 } // --------------------------------------------------------------------------
 // ============================== draw ========================================
 function draw() {
@@ -52,8 +53,14 @@ function draw() {
   else  player_1.draw();
   if (player_2)  player_2.draw();
 
-  if (mouseIsPressed)  drag_time++;
-  else drag_time = 0;
+  if (mouseIsPressed) {
+    drag_time++;
+    if (pre_mouse_pos.x == 0 && pre_mouse_pos.y == 0) {
+      pre_mouse_pos.x = mouseX;
+      pre_mouse_pos.y = mouseY;
+    }
+  }
+  //else drag_time = 0;
 } // --------------------------------------------------------------------------
 // ============================== draw_start ==================================
 function draw_start() {
