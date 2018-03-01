@@ -24,7 +24,7 @@ var block_color = [
   [255, 0, 255],
   [122, 0, 122]
 ];
-var input = [], drag_time=0;
+var input = [];
 var sound = {};
 var font;
 // ============================== preload =====================================
@@ -54,7 +54,7 @@ function draw() {
   if (player_2)  player_2.draw();
 
   if (mouseIsPressed) {
-    drag_start = millis();
+    if (drag_start == 0)  drag_start = millis();
     if (pre_mouse_pos.x == 0 && pre_mouse_pos.y == 0) {
       pre_mouse_pos.x = mouseX;
       pre_mouse_pos.y = mouseY;
