@@ -47,7 +47,7 @@ function keyPressed() {
     }
   }
 
-  if (player_1 && player_1.current_block != -1 && player_1.current_block.pos.y >= 2*block_size) {
+  if (player_1 && player_1.current_block != -1 && player_1.current_block.pos.y >= block_size && !pause) {
     if (keyCode === player_1.input.left && !player_1.current_block.collide(player_1.matrix, -1, 0)) { // left
       player_1.current_block.move(-1, 0);
       sound.move.play();
@@ -63,7 +63,7 @@ function keyPressed() {
     }
   }
 
-  if (player_2 && player_2.current_block != -1 && player_2.current_block.pos.y >= 2*block_size) {
+  if (player_2 && player_2.current_block != -1 && player_2.current_block.pos.y >= block_size  && !pause) {
     if (keyCode === player_2.input.left && !player_2.current_block.collide(player_2.matrix, -1, 0)) {
       player_2.current_block.move(-1, 0);
       sound.move.play();
@@ -100,12 +100,12 @@ function mouseReleased() {
 
     player_1 = new Game(createVector((width*0.5) - (2*block_size), (height/2) - (12*block_size)), 3);
 
-  } else if (millis() <= drag_start+100 && !player_1.current_block.collide(player_1.matrix, 0, 0)) {
-    player_1.current_block.rotate(player_1.matrix);
-    sound.turn.play();
+  } else if (player_1 && player_1.current_block != -1 && player_1.current_block.pos.y >= block_size && !pause) {
 
-  } else if (player_1 && player_1.current_block != -1 && player_1.current_block.pos.y >= 2*block_size) {
-    if (player_1.input.left() && !player_1.current_block.collide(player_1.matrix, -1, 0)) { // left
+    if (millis() <= drag_start+200 && !player_1.current_block.collide(player_1.matrix, 0, 0)) { // touch = rotate
+      player_1.current_block.rotate(player_1.matrix);
+      sound.turn.play();
+    } else if (player_1.input.left() && !player_1.current_block.collide(player_1.matrix, -1, 0)) { // left
       player_1.current_block.move(-1, 0);
       sound.move.play();
 

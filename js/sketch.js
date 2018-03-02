@@ -58,7 +58,7 @@ function draw() {
 // ============================== draw_start ==================================
 function draw_start() {
 
-  if (text_y < height*.2 && frameCount%10 == 0) text_y += block_size;
+  if (text_y < height*.2 && millis()%100 <= 20) text_y += block_size;
 
   push();
   translate(width*.5, text_y);

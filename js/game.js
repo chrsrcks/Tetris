@@ -36,14 +36,14 @@ var Game = function(_pos, _player) {
 
       this.current_block.draw(); // draw current block
 
-      // input speed down && colide bottom && pos.y >= 2
-      if (keyIsDown(this.input.fast_down) && !this.current_block.collide(this.matrix, 0, 1) && this.current_block.pos.y >= 2*block_size)
-        this.current_block.move(0 ,1); // move y +1
-
       if (!pause) {
 
-        //this.timer ++;
-        if (this.timer <= millis()) { // timer
+        // input speed down && colide bottom && pos.y >= 2
+        if (keyIsDown(this.input.fast_down) && !this.current_block.collide(this.matrix, 0, 1) && this.current_block.pos.y >= 2*block_size)
+          this.current_block.move(0 ,1); // move y +1
+
+        // timer
+        if (this.timer <= millis()) {
           this.timer = millis() + this.level_speed;
           this.temp_lines = [];
 
@@ -228,7 +228,7 @@ var Game = function(_pos, _player) {
     for (let i = this.temp_lines.length-1; i >= 0; i--) {
       for (let xx = this.matrix.length-1; xx >= 0; xx--) {
 
-        if (this.timer%10 < 5) {
+        if (round(millis()%167) <= 83) {
           push();
           fill(255);
           stroke(255);
@@ -268,10 +268,12 @@ var Game = function(_pos, _player) {
 
   }
 
-  this.pushLines = function(_lines) {
+  this.pushLines = function(lines) {
+
+    let _lines = round(lines/2);
 
     for (let yy = 2; yy < this.matrix[0].length; yy++) {
-      let random_block = floor(random(this.matrix.length));
+      let random_block = floor(random(this.matrix.length - lines));
       for (let xx = this.matrix.length-1; xx >= 0; xx--) {
 
         if (yy >= _lines)
@@ -279,8 +281,8 @@ var Game = function(_pos, _player) {
 
         if (yy >= this.matrix[0].length - _lines) {
 
-          if (xx != random_block)  this.matrix[xx][yy] = floor(random(7));
-          else  this.matrix[xx][yy] = undefined;
+          if (xx >= random_block && xx < random_block + lines)  this.matrix[xx][yy] = undefined;
+          else  this.matrix[xx][yy] = floor(random(7));
         }
 
       }
