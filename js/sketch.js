@@ -1,5 +1,5 @@
 /*******************************************************************************
-Name: Tetris clone
+Name: Tetris
 Autor: Christopher Ruckes
 Date: 23.02.2018
 *******************************************************************************/
@@ -40,21 +40,22 @@ function setup(){
   textFont(font);
   text_y = -(5*block_size);
   pre_mouse_pos = createVector(0,0);
-  buttons.push( new Button('1 Player', width/2, height*.5, 150, 40, ()=> {
+  buttons[0] = new Button('1 Player', width/2, height*.5, 150, 40, ()=> {
     if (!player_1)
         player_1 = new Game( createVector((width*0.5) - (5*block_size), (height/2) - (12*block_size)), 0 );
-  }));
-  buttons.push( new Button('2 Player', width/2, height*.6, 150, 40, ()=> {
+  });
+  buttons[1] = new Button('2 Player', width/2, height*.6, 150, 40, ()=> {
     if (!player_1 && !player_2) {
         player_1 = new Game( createVector((width*0.35) - (5*block_size), (height/2) - (12*block_size)), 1 );
         player_2 = new Game( createVector((width*0.75) - (5*block_size), (height/2) - (12*block_size)), 2 );
     }
-  }));
-  buttons.push( new Button('Fullscreen', width-85, 30, 150, 40, ()=> {
+  });
+  buttons[2] = new Button('Fullscreen', width-85, 30, 150, 40, ()=> {
     let fs = fullscreen(); // get
     fullscreen(!fs); // set 
-  }));
-  buttons.push( new Button('Pause', 60, 30, 90, 40, ()=> pause = !pause ));
+  });
+  buttons[3] = new Button('Pause', 160, 30, 90, 40, ()=> pause = !pause );
+  buttons[4] = new Button('Home', 60, 30, 90, 40, ()=> { player_1=false;player_2=false;pause=false; } );
 } // --------------------------------------------------------------------------
 // ============================== draw ========================================
 function draw() {
@@ -64,6 +65,7 @@ function draw() {
   else {
     player_1.draw();
     buttons[3].draw();
+    buttons[4].draw();
     if (player_2) player_2.draw();
     if (pause) draw_pause();
   }          
@@ -95,9 +97,8 @@ function draw_start() {
   }
   pop();
 
-  for (let i=buttons.length-2; i>=0; i--) {
-    buttons[i].draw();
-  }
+  buttons[0].draw();
+  buttons[1].draw();
 
 } // --------------------------------------------------------------------------
 // ============================== draw pause ==================================
