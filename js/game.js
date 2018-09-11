@@ -49,7 +49,7 @@ var Game = function(_pos, _player) {
 
           if (this.current_block.collide(this.matrix, 0, 1)) { // collide bottom
 
-            this.current_block.pushInMatrix(this.matrix);
+            this.current_block.pushToMatrix(this.matrix);
 
             this.temp_lines = this.check_lines(); // check full lines & return array with yy
             if (this.temp_lines.length > 0) {

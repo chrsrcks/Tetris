@@ -71,7 +71,7 @@ var Block = function(_type) {
   }
 
 
-  this.pushInMatrix = function(_matrix) {
+  this.pushToMatrix = function(_matrix) {
 
     for (let xx = 0; xx < this.matrix.length; xx++) {
       for (let yy = 0; yy < this.matrix[xx].length; yy++) {
